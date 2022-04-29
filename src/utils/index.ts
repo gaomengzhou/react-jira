@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-export const isFalsy = (value: any) => (value === 0 ? false : !value);
+export const isFalsy = (value: unknown) => (value === 0 ? false : !value);
 
 export const cleanObject = (obj: object) => {
   const result = { ...obj };
@@ -21,26 +21,32 @@ export const useMount = (callback: () => void) => {
   }, []);
 };
 
-// export const debounce = (func, delay) => {
-//   let timerout;
-//   return () => {
-//     if (timerout) {
-//       clearTimeout(timerout);
-//     }
-//     timerout = setTimeout(() => {
-//       func();
-//     }, delay);
-//   };
-// };
-
-export const useDebounce = (value: any, delay?: number) => {
+export const useDebounce = <T>(value: T, delay?: number) => {
   const [debounceValue, setDebounceValue] = useState(value);
   useEffect(() => {
     const timeout = setTimeout(() => {
-      console.log(new Date().getSeconds());
       setDebounceValue(value);
     }, delay);
     return () => clearTimeout(timeout);
   }, [value, delay]);
   return debounceValue;
+};
+
+export const useArray = <T>(persons: T[]) => {
+  const [value, setValue] = useState(persons);
+  return {
+    value,
+    setValue,
+    add: (item: T) => {
+      setValue([...value, item]);
+    },
+    clear: () => {
+      setValue([]);
+    },
+    removeIndex: (index: number) => {
+      const arr = [...value];
+      arr.splice(index, 1);
+      setValue(arr);
+    },
+  };
 };
