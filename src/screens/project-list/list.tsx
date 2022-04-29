@@ -1,4 +1,5 @@
-import { User } from "./search-panel";
+import React from "react";
+import { User } from "screens/project-list/search-panel";
 
 interface Project {
   id: string;
@@ -12,6 +13,7 @@ interface ListProps {
   list: Project[];
   users: User[];
 }
+
 export const List = ({ list, users }: ListProps) => {
   return (
     <table>
@@ -22,17 +24,16 @@ export const List = ({ list, users }: ListProps) => {
         </tr>
       </thead>
       <tbody>
-        {list.map((item) => {
-          return (
-            <tr key={item.id}>
-              <td>{item.name}</td>
-              <td>
-                {users.find((user) => user.id === item.personId)?.name ||
-                  "未知"}
-              </td>
-            </tr>
-          );
-        })}
+        {list.map((project) => (
+          <tr key={project.id}>
+            <td>{project.name}</td>
+            {/*undefined.name*/}
+            <td>
+              {users.find((user) => user.id === project.personId)?.name ||
+                "未知"}
+            </td>
+          </tr>
+        ))}
       </tbody>
     </table>
   );

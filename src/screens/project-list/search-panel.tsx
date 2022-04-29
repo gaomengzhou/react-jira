@@ -1,3 +1,6 @@
+import React from "react";
+import { useEffect, useState } from "react";
+
 export interface User {
   id: string;
   name: string;
@@ -5,46 +8,46 @@ export interface User {
   title: string;
   organization: string;
 }
-interface SerchPanelProps {
+
+interface SearchPanelProps {
+  users: User[];
   param: {
     name: string;
     personId: string;
   };
-  setParam: (param: SerchPanelProps["param"]) => void;
-  users: User[];
+  setParam: (param: SearchPanelProps["param"]) => void;
 }
-export const SearchPanel = ({ param, setParam, users }: SerchPanelProps) => {
+
+export const SearchPanel = ({ users, param, setParam }: SearchPanelProps) => {
   return (
     <form>
       <div>
-        {/* <input type="text" value={param.name} onChange={e=>setParam(param.name=123)} /> */}
+        {/*setParam(Object.assign({}, param, {name:evt.target.value}))*/}
         <input
           type="text"
           value={param.name}
-          onChange={(e) =>
+          onChange={(evt) =>
             setParam({
               ...param,
-              name: e.target.value,
+              name: evt.target.value,
             })
           }
         />
         <select
           value={param.personId}
-          onChange={(e) =>
+          onChange={(evt) =>
             setParam({
               ...param,
-              personId: e.target.value,
+              personId: evt.target.value,
             })
           }
         >
-          <option value="">负责人</option>
-          {users.map((item) => {
-            return (
-              <option key={item.id} value={item.id}>
-                {item.name}
-              </option>
-            );
-          })}
+          <option value={""}>负责人</option>
+          {users.map((user) => (
+            <option key={user.id} value={user.id}>
+              {user.name}
+            </option>
+          ))}
         </select>
       </div>
     </form>
