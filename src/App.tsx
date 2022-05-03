@@ -2,7 +2,7 @@ import { AuthenticatedApp } from "authenticated";
 import { useAuth } from "context/auth-context";
 import React from "react";
 import { UnathenticatedApp } from "unauthenticated-app";
-import "./App.less";
+import "./App.css";
 
 function App() {
   const { user } = useAuth();
