@@ -1,6 +1,5 @@
 /** @jsx jsx */
 import { jsx } from "@emotion/react";
-import React from "react";
 import { Form, Input, Select } from "antd";
 
 export interface User {
@@ -41,7 +40,7 @@ export const SearchPanel = ({ users, param, setParam }: SearchPanelProps) => {
       <Form.Item>
         <Select
           value={param.personId}
-          onChange={(value) =>
+          onChange={(value: string) =>
             setParam({
               ...param,
               personId: value,
