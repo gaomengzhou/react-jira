@@ -5,10 +5,21 @@ import { useAuth } from "context/auth-context";
 import React, { Children } from "react";
 import { ProjectListScreen } from "screens/project-list";
 import { ReactComponent as SoftwareLogo } from "assets/software-logo.svg";
-import { Dropdown, Menu } from "antd";
+import { Button, Dropdown, Menu } from "antd";
+import { ItemType } from "antd/lib/menu/hooks/useItems";
 
 export const AuthenticatedApp = () => {
   const { logout, user } = useAuth();
+  const items: ItemType[] = [
+    {
+      label: (
+        <Button type="link" onClick={logout}>
+          登出
+        </Button>
+      ),
+      type: "group",
+    },
+  ];
   return (
     <Container>
       <Header between={true}>
@@ -18,16 +29,10 @@ export const AuthenticatedApp = () => {
           <h2>用户</h2>
         </HeaderLeft>
         <HeaderRight>
-          <Dropdown
-            overlay={
-              <Menu>
-                <Menu.Item key={"logout"}>
-                  <a onClick={logout}>登出</a>
-                </Menu.Item>
-              </Menu>
-            }
-          >
-            <a onClick={(e) => e.preventDefault()}>Hi,{user?.name}</a>
+          <Dropdown overlay={<Menu items={items} />}>
+            <Button type="link" onClick={(e) => e.preventDefault()}>
+              Hi,{user?.name}
+            </Button>
           </Dropdown>
         </HeaderRight>
       </Header>
