@@ -1,8 +1,7 @@
-import { Table } from "antd";
-import { spawn } from "child_process";
-import dayjs from "dayjs";
 import React from "react";
 import { User } from "screens/project-list/search-panel";
+import { Table } from "antd";
+import dayjs from "dayjs";
 
 interface Project {
   id: string;
@@ -21,6 +20,7 @@ interface ListProps {
 export const List = ({ list, users }: ListProps) => {
   return (
     <Table
+      rowKey={"id"}
       pagination={false}
       columns={[
         {

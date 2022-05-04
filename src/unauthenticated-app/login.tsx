@@ -1,8 +1,7 @@
+import React from "react";
 import { useAuth } from "context/auth-context";
-import React, { FormEvent } from "react";
-import { cleanObject } from "utils";
-import { Button, Form, Input } from "antd";
-import { LongButton } from "unauthenticated-app";
+import { Form, Input } from "antd";
+import { LongButton } from "unauthenticated-app/index";
 
 // interface Base {
 //   id: number
@@ -18,9 +17,10 @@ import { LongButton } from "unauthenticated-app";
 // // 鸭子类型(duck typing)：面向接口编程 而不是 面向对象编程
 // const a = {id: 1, name: 'jack'}
 // test(a)
+const apiUrl = process.env.REACT_APP_API_URL;
 
 export const LoginScreen = () => {
-  const { login } = useAuth();
+  const { login, user } = useAuth();
 
   // HTMLFormElement extends Element
   const handleSubmit = (values: { username: string; password: string }) => {
@@ -33,13 +33,13 @@ export const LoginScreen = () => {
         name={"username"}
         rules={[{ required: true, message: "请输入用户名" }]}
       >
-        <Input placeholder="用户名" type="text" id={"username"} />
+        <Input placeholder={"用户名"} type="text" id={"username"} />
       </Form.Item>
       <Form.Item
         name={"password"}
         rules={[{ required: true, message: "请输入密码" }]}
       >
-        <Input placeholder="密码" type="password" id={"password"} />
+        <Input placeholder={"密码"} type="password" id={"password"} />
       </Form.Item>
       <Form.Item>
         <LongButton htmlType={"submit"} type={"primary"}>

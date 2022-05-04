@@ -1,8 +1,7 @@
-import { Button, Form, Input } from "antd";
+import React from "react";
 import { useAuth } from "context/auth-context";
-import React, { FormEvent } from "react";
-import { LongButton } from "unauthenticated-app";
-import { cleanObject } from "utils";
+import { Form, Input } from "antd";
+import { LongButton } from "unauthenticated-app/index";
 
 // interface Base {
 //   id: number
@@ -21,7 +20,7 @@ import { cleanObject } from "utils";
 const apiUrl = process.env.REACT_APP_API_URL;
 
 export const RegisterScreen = () => {
-  const { register } = useAuth();
+  const { register, user } = useAuth();
 
   // HTMLFormElement extends Element
   const handleSubmit = (values: { username: string; password: string }) => {
@@ -34,16 +33,16 @@ export const RegisterScreen = () => {
         name={"username"}
         rules={[{ required: true, message: "请输入用户名" }]}
       >
-        <Input placeholder="用户名" type="text" id={"username"} />
+        <Input placeholder={"用户名"} type="text" id={"username"} />
       </Form.Item>
       <Form.Item
         name={"password"}
         rules={[{ required: true, message: "请输入密码" }]}
       >
-        <Input placeholder="密码" type="password" id={"password"} />
+        <Input placeholder={"密码"} type="password" id={"password"} />
       </Form.Item>
       <Form.Item>
-        <LongButton htmlType="submit" type={"primary"}>
+        <LongButton htmlType={"submit"} type={"primary"}>
           注册
         </LongButton>
       </Form.Item>
