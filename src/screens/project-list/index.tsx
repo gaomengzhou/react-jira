@@ -6,13 +6,13 @@ import styled from "@emotion/styled";
 import { useProjece } from "utils/project";
 import { useUsers } from "utils/user";
 import { useUrlQueryParam } from "utils/url";
+import { useProjectsSearchParams } from "./utils";
 
 export const ProjectListScreen = () => {
-  const [param, setParam] = useUrlQueryParam(["name", "personId"]);
-  const debouncedParam = useDebounce(param, 200);
-  const { isloading, error, data: list } = useProjece(debouncedParam);
-  const { data: users } = useUsers();
   useDocumentTitle("项目列表", false);
+  const [param, setParam] = useProjectsSearchParams();
+  const { isloading, error, data: list } = useProjece(useDebounce(param, 200));
+  const { data: users } = useUsers();
   return (
     <Container>
       <h1>项目列表</h1>
@@ -21,7 +21,7 @@ export const ProjectListScreen = () => {
     </Container>
   );
 };
-ProjectListScreen.whyDidYouRender = false;
+ProjectListScreen.whyDidYouRender = true;
 const Container = styled.div`
   padding: 3.2rem;
 `;
