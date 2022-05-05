@@ -10,11 +10,18 @@ const defualtInitialState: State<null> = {
   data: null,
   error: null,
 };
-export const useAsync = <D>(initialState?: State<D>) => {
+const defualtConfig = {
+  throwOnError: false,
+};
+export const useAsync = <D>(
+  initialState?: State<D>,
+  initialConfig?: typeof defualtConfig
+) => {
   const [state, setState] = useState<State<D>>({
     ...defualtInitialState,
     ...initialState,
   });
+  const config = { ...defualtConfig, ...initialConfig };
 
   const setData = (data: D) =>
     setState({
@@ -38,7 +45,13 @@ export const useAsync = <D>(initialState?: State<D>) => {
       ...state,
       stat: "loading",
     });
-    return promise.then(setData).catch(setError);
+    return promise
+      .then((res) => setData(res))
+      .catch((e) => {
+        setError(e);
+        if (config.throwOnError) return Promise.reject(e);
+        return e;
+      });
   };
   return {
     isloading: state.stat === "loading",
