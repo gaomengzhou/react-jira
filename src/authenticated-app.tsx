@@ -32,7 +32,7 @@ export const AuthenticatedApp = () => {
       type: "group",
     },
   ];
-  useDocumentTitle("项目列表");
+  useDocumentTitle("项目列表", false);
   return (
     <Container>
       <Header between={true}>
