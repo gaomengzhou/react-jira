@@ -6,6 +6,7 @@ import styled from "@emotion/styled";
 import { Row } from "components/lib";
 import { Button, Dropdown, Menu } from "antd";
 import { ItemType } from "antd/lib/menu/hooks/useItems";
+import { useDocumentTitle } from "utils";
 
 /**
  * grid 和 flex 各自的应用场景
@@ -31,7 +32,7 @@ export const AuthenticatedApp = () => {
       type: "group",
     },
   ];
-
+  useDocumentTitle("项目列表");
   return (
     <Container>
       <Header between={true}>
