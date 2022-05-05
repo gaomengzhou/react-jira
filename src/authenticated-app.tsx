@@ -21,7 +21,7 @@ import { ItemType } from "antd/lib/menu/hooks/useItems";
 
 export const AuthenticatedApp = () => {
   const { logout, user } = useAuth();
-    const items: ItemType[] = [
+  const items: ItemType[] = [
     {
       label: (
         <Button type="link" onClick={logout}>
@@ -31,6 +31,7 @@ export const AuthenticatedApp = () => {
       type: "group",
     },
   ];
+
   return (
     <Container>
       <Header between={true}>
@@ -40,7 +41,7 @@ export const AuthenticatedApp = () => {
           <h2>用户</h2>
         </HeaderLeft>
         <HeaderRight>
-        <Dropdown overlay={<Menu items={items} />}>
+          <Dropdown overlay={<Menu items={items} />}>
             <Button type="link" onClick={(e) => e.preventDefault()}>
               Hi,{user?.name}
             </Button>
