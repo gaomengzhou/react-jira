@@ -5,7 +5,6 @@ import { useDebounce, useDocumentTitle } from "utils";
 import styled from "@emotion/styled";
 import { useProjece } from "utils/project";
 import { useUsers } from "utils/user";
-import { useUrlQueryParam } from "utils/url";
 import { useProjectsSearchParams } from "./utils";
 
 export const ProjectListScreen = () => {
@@ -21,7 +20,7 @@ export const ProjectListScreen = () => {
     </Container>
   );
 };
-ProjectListScreen.whyDidYouRender = true;
+ProjectListScreen.whyDidYouRender = false;
 const Container = styled.div`
   padding: 3.2rem;
 `;

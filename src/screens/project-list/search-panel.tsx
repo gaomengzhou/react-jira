@@ -40,12 +40,7 @@ export const SearchPanel = ({ users, param, setParam }: SearchPanelProps) => {
         <UesrSelect
           defaultOptionName="负责人"
           value={param.personId}
-          onChange={(value) =>
-            setParam({
-              ...param,
-              personId: value,
-            })
-          }
+          onChange={(value) => setParam({ ...param, personId: value })}
         />
       </Form.Item>
     </Form>
