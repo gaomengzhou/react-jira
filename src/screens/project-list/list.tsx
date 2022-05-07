@@ -18,16 +18,18 @@ export interface Project {
 
 interface ListProps extends TableProps<Project> {
   users: User[];
+  refresh?: () => void;
 }
 
 export const List = ({ users, ...props }: ListProps) => {
   const { mutate } = useEditProject();
   /**
-   * 函数柯里化实现一个PointFree
+   * 函数柯里化 PointFree
    * onCheckedChange = {(pin)=>pinProject(project.id)(pin)}
    * 消参后写为onCheckedChange = {pinProject(project.id)}
    */
-  const pinProject = (id: number) => (pin: boolean) => mutate({ id, pin });
+  const pinProject = (id: number) => (pin: boolean) =>
+    mutate({ id, pin }).then(props.refresh);
 
   return (
     <Table
