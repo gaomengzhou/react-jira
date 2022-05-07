@@ -1,89 +1,84 @@
-import { useCallback, useState } from "react";
-import { useMountedRef } from "utils";
+import { useState } from "react";
 
 interface State<D> {
   error: Error | null;
   data: D | null;
-  stat: "idle" | "loading" | "error" | "succes";
+  stat: "idle" | "loading" | "error" | "success";
 }
-const defualtInitialState: State<null> = {
+
+const defaultInitialState: State<null> = {
   stat: "idle",
   data: null,
   error: null,
 };
-const defualtConfig = {
+
+const defaultConfig = {
   throwOnError: false,
 };
+
 export const useAsync = <D>(
   initialState?: State<D>,
-  initialConfig?: typeof defualtConfig
+  initialConfig?: typeof defaultConfig
 ) => {
+  const config = { ...defaultConfig, ...initialConfig };
   const [state, setState] = useState<State<D>>({
-    ...defualtInitialState,
+    ...defaultInitialState,
     ...initialState,
   });
-  const mountedRef = useMountedRef();
+  // useState直接传入函数的含义是：惰性初始化；所以，要用useState保存函数，不能直接传入函数
+  // https://codesandbox.io/s/blissful-water-230u4?file=/src/App.js
   const [retry, setRetry] = useState(() => () => {});
-  const config = { ...defualtConfig, ...initialConfig };
 
-  const setData = useCallback(
-    (data: D) =>
-      setState({
-        data,
-        stat: "succes",
-        error: null,
-      }),
-    []
-  );
+  const setData = (data: D) =>
+    setState({
+      data,
+      stat: "success",
+      error: null,
+    });
 
-  const setError = useCallback(
-    (error: Error) =>
-      setState({
-        data: null,
-        stat: "error",
-        error,
-      }),
-    []
-  );
+  const setError = (error: Error) =>
+    setState({
+      error,
+      stat: "error",
+      data: null,
+    });
 
-  const run = useCallback(
-    (promise: Promise<D>, runConfig?: { retry: () => Promise<D> }) => {
-      if (!promise || !promise.then) {
-        throw new Error("请传入Promise类型数据!");
+  // run 用来触发异步请求
+  const run = (
+    promise: Promise<D>,
+    runConfig?: { retry: () => Promise<D> }
+  ) => {
+    if (!promise || !promise.then) {
+      throw new Error("请传入 Promise 类型数据");
+    }
+    setRetry(() => () => {
+      if (runConfig?.retry) {
+        run(runConfig?.retry(), runConfig);
       }
-      setRetry(() => () => {
-        if (runConfig?.retry) {
-          run(runConfig?.retry(), runConfig);
-        }
+    });
+    setState({ ...state, stat: "loading" });
+    return promise
+      .then((data) => {
+        setData(data);
+        return data;
+      })
+      .catch((error) => {
+        // catch会消化异常，如果不主动抛出，外面是接收不到异常的
+        setError(error);
+        if (config.throwOnError) return Promise.reject(error);
+        return error;
       });
-      setState((state) => ({
-        ...state,
-        stat: "loading",
-      }));
-      return promise
-        .then((res) => {
-          if (mountedRef.current) {
-            setData(res);
-            return res;
-          }
-        })
-        .catch((e) => {
-          setError(e);
-          if (config.throwOnError) return Promise.reject(e);
-          return e;
-        });
-    },
-    [config.throwOnError, mountedRef, setData, setError]
-  );
+  };
 
   return {
-    isloading: state.stat === "loading",
     isIdle: state.stat === "idle",
+    isLoading: state.stat === "loading",
     isError: state.stat === "error",
-    isSucces: state.stat === "succes",
+    isSuccess: state.stat === "success",
     run,
     setData,
     setError,
+    // retry 被调用时重新跑一遍run，让state刷新一遍
     retry,
     ...state,
   };

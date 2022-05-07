@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const isFalsy = (value: unknown) => (value === 0 ? false : !value);
 
@@ -28,9 +28,10 @@ export const cleanObject = (object: { [key: string]: unknown }) => {
 };
 
 export const useMount = (callback: () => void) => {
-  const handleCallback = useRef(callback);
   useEffect(() => {
-    handleCallback.current();
+    callback();
+    // TODO 依赖项里加上callback会造成无限循环，这个和useCallback以及useMemo有关系
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 };
 
@@ -89,32 +90,41 @@ export const useArray = <T>(initialArray: T[]) => {
   };
 };
 
-export const useDocumentTitle = (
-  title: string,
-  keepOnUnmount: boolean = true
-) => {
-  // useRef 返回一个可变的 ref 对象，其 .current 属性被初始化为传入的参数（initialValue）。返回的 ref 对象在组件的整个生命周期内保持不变。
+export const useDocumentTitle = (title: string, keepOnUnmount = true) => {
   const oldTitle = useRef(document.title).current;
+  // 页面加载时: 旧title
+  // 加载后：新title
+
   useEffect(() => {
     document.title = title;
   }, [title]);
 
   useEffect(() => {
     return () => {
-      if (!keepOnUnmount) document.title = oldTitle;
+      if (!keepOnUnmount) {
+        // 如果不指定依赖，读到的就是旧title
+        document.title = oldTitle;
+      }
     };
   }, [keepOnUnmount, oldTitle]);
 };
 
 export const resetRoute = () => (window.location.href = window.location.origin);
 
-export const useMountedRef = () => {
-  const mountedRef = useRef(false);
-  useEffect(() => {
-    mountedRef.current = true;
-    return () => {
-      mountedRef.current = false;
-    };
-  });
-  return mountedRef;
+/**
+ * 传入一个对象，和键集合，返回对应的对象中的键值对
+ * @param obj
+ * @param keys
+ */
+export const subset = <
+  O extends { [key in string]: unknown },
+  K extends keyof O
+>(
+  obj: O,
+  keys: K[]
+) => {
+  const filteredEntries = Object.entries(obj).filter(([key]) =>
+    keys.includes(key as K)
+  );
+  return Object.fromEntries(filteredEntries) as Pick<O, K>;
 };

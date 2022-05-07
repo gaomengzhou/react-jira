@@ -1,12 +1,15 @@
 import React from "react";
 import { User } from "screens/project-list/search-panel";
-import { Table } from "antd";
+import { Dropdown, Menu, Table } from "antd";
 import dayjs from "dayjs";
-import { TableProps } from "antd/lib/table";
+import { TableProps } from "antd/es/table";
+// react-router 和 react-router-dom的关系，类似于 react 和 react-dom/react-native/react-vr...
 import { Link } from "react-router-dom";
 import { Pin } from "components/pin";
 import { useEditProject } from "utils/project";
+import { ButtonNoPadding } from "components/lib";
 
+// TODO 把所有ID都改成number类型
 export interface Project {
   id: number;
   name: string;
@@ -19,26 +22,20 @@ export interface Project {
 interface ListProps extends TableProps<Project> {
   users: User[];
   refresh?: () => void;
+  setProjectModalOpen: (isOpen: boolean) => void;
 }
 
 export const List = ({ users, ...props }: ListProps) => {
   const { mutate } = useEditProject();
-  /**
-   * 函数柯里化 PointFree
-   * onCheckedChange = {(pin)=>pinProject(project.id)(pin)}
-   * 消参后写为onCheckedChange = {pinProject(project.id)}
-   */
   const pinProject = (id: number) => (pin: boolean) =>
     mutate({ id, pin }).then(props.refresh);
-
   return (
     <Table
       rowKey={"id"}
       pagination={false}
-      {...props}
       columns={[
         {
-          title: <Pin checked disabled />,
+          title: <Pin checked={true} disabled={true} />,
           render(value, project) {
             return (
               <Pin
@@ -52,7 +49,7 @@ export const List = ({ users, ...props }: ListProps) => {
           title: "名称",
           sorter: (a, b) => a.name.localeCompare(b.name),
           render(value, project) {
-            return <Link to={`${project.id}`}>{project.name}</Link>;
+            return <Link to={String(project.id)}>{project.name}</Link>;
           },
         },
         {
@@ -82,7 +79,30 @@ export const List = ({ users, ...props }: ListProps) => {
             );
           },
         },
+        {
+          render(value, project) {
+            return (
+              <Dropdown
+                overlay={
+                  <Menu>
+                    <Menu.Item key={"edit"}>
+                      <ButtonNoPadding
+                        type={"link"}
+                        onClick={() => props.setProjectModalOpen(true)}
+                      >
+                        编辑
+                      </ButtonNoPadding>
+                    </Menu.Item>
+                  </Menu>
+                }
+              >
+                <ButtonNoPadding type={"link"}>...</ButtonNoPadding>
+              </Dropdown>
+            );
+          },
+        },
       ]}
+      {...props}
     />
   );
 };

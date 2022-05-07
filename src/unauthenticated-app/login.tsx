@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useAuth } from "context/auth-context";
 import { Form, Input } from "antd";
 import { LongButton } from "unauthenticated-app/index";
@@ -26,14 +26,18 @@ export const LoginScreen = ({
   onError: (error: Error) => void;
 }) => {
   const { login, user } = useAuth();
-  const { run, isloading } = useAsync(undefined, { throwOnError: true });
+  const { run, isLoading } = useAsync(undefined, { throwOnError: true });
 
   // HTMLFormElement extends Element
   const handleSubmit = async (values: {
     username: string;
     password: string;
   }) => {
-    run(login(values)).catch(onError);
+    try {
+      await run(login(values));
+    } catch (e) {
+      onError(e);
+    }
   };
 
   return (
@@ -51,7 +55,7 @@ export const LoginScreen = ({
         <Input placeholder={"密码"} type="password" id={"password"} />
       </Form.Item>
       <Form.Item>
-        <LongButton loading={isloading} htmlType={"submit"} type={"primary"}>
+        <LongButton loading={isLoading} htmlType={"submit"} type={"primary"}>
           登录
         </LongButton>
       </Form.Item>

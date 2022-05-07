@@ -26,10 +26,10 @@ export const RegisterScreen = ({
   onError: (error: Error) => void;
 }) => {
   const { register, user } = useAuth();
-  const { run, isloading } = useAsync(undefined, { throwOnError: true });
+  const { run, isLoading } = useAsync(undefined, { throwOnError: true });
 
   // HTMLFormElement extends Element
-  const handleSubmit = ({
+  const handleSubmit = async ({
     cpassword,
     ...values
   }: {
@@ -38,10 +38,14 @@ export const RegisterScreen = ({
     cpassword: string;
   }) => {
     if (cpassword !== values.password) {
-      onError(new Error("两次密码不相同!"));
+      onError(new Error("请确认两次输入的密码相同"));
       return;
     }
-    run(register(values)).catch(onError);
+    try {
+      await run(register(values));
+    } catch (e) {
+      onError(e);
+    }
   };
 
   return (
@@ -65,7 +69,7 @@ export const RegisterScreen = ({
         <Input placeholder={"确认密码"} type="password" id={"cpassword"} />
       </Form.Item>
       <Form.Item>
-        <LongButton loading={isloading} htmlType={"submit"} type={"primary"}>
+        <LongButton loading={isLoading} htmlType={"submit"} type={"primary"}>
           注册
         </LongButton>
       </Form.Item>

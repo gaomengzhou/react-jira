@@ -11,7 +11,9 @@ import { useDocumentTitle } from "utils";
 export const UnauthenticatedApp = () => {
   const [isRegister, setIsRegister] = useState(false);
   const [error, setError] = useState<Error | null>(null);
+
   useDocumentTitle("请登录注册以继续");
+
   return (
     <Container>
       <Header />
@@ -19,7 +21,7 @@ export const UnauthenticatedApp = () => {
       <ShadowCard>
         <Title>{isRegister ? "请注册" : "请登录"}</Title>
         {error ? (
-          <Typography.Text type="danger">{error.message}</Typography.Text>
+          <Typography.Text type={"danger"}>{error.message}</Typography.Text>
         ) : null}
         {isRegister ? (
           <RegisterScreen onError={setError} />

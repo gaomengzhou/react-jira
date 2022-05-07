@@ -1,23 +1,24 @@
-import React, { ReactElement } from "react";
-type FallbackRender = (props: { error: Error | null }) => ReactElement;
+import React from "react";
+
+type FallbackRender = (props: { error: Error | null }) => React.ReactElement;
+
+// https://github.com/bvaughn/react-error-boundary
 export class ErrorBoundary extends React.Component<
-  React.PropsWithChildren<{ FallbackRender: FallbackRender }>,
+  React.PropsWithChildren<{ fallbackRender: FallbackRender }>,
   { error: Error | null }
 > {
+  state = { error: null };
+
+  // 当子组件抛出异常，这里会接收到并且调用
   static getDerivedStateFromError(error: Error) {
-    return error;
+    return { error };
   }
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      error: null,
-    };
-  }
+
   render() {
     const { error } = this.state;
-    const { FallbackRender, children } = this.props;
+    const { fallbackRender, children } = this.props;
     if (error) {
-      return FallbackRender({ error });
+      return fallbackRender({ error });
     }
     return children;
   }

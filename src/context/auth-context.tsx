@@ -1,4 +1,4 @@
-import React, { ProviderProps, ReactNode, useState } from "react";
+import React, { ReactNode } from "react";
 import * as auth from "auth-provider";
 import { User } from "screens/project-list/search-panel";
 import { http } from "utils/http";
@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const {
     data: user,
     error,
-    isloading,
+    isLoading,
     isIdle,
     isError,
     run,
@@ -51,12 +51,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useMount(() => {
     run(bootstrapUser());
   });
-  if (isIdle || isloading) {
+
+  if (isIdle || isLoading) {
     return <FullPageLoading />;
   }
+
   if (isError) {
     return <FullPageErrorFallback error={error} />;
   }
+
   return (
     <AuthContext.Provider
       children={children}

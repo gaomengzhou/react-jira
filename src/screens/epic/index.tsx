@@ -1,3 +1,5 @@
 import React from "react";
 
-export const EpicScreen = () => <div>EpicScreen</div>;
+export const EpicScreen = () => {
+  return <h1>Epic</h1>;
+};
