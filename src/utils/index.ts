@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export const isFalsy = (value: unknown) => (value === 0 ? false : !value);
 
@@ -28,10 +28,9 @@ export const cleanObject = (object: { [key: string]: unknown }) => {
 };
 
 export const useMount = (callback: () => void) => {
+  const handleCallback = useRef(callback);
   useEffect(() => {
-    callback();
-    // TODO 依赖项里加上callback会造成无限循环，这个和useCallback以及useMemo有关系
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    handleCallback.current();
   }, []);
 };
 
@@ -108,3 +107,14 @@ export const useDocumentTitle = (
 };
 
 export const resetRoute = () => (window.location.href = window.location.origin);
+
+export const useMountedRef = () => {
+  const mountedRef = useRef(false);
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  });
+  return mountedRef;
+};
