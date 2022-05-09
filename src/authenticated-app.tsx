@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { ProjectListScreen } from "screens/project-list";
 import { useAuth } from "context/auth-context";
 import { ReactComponent as SoftwareLogo } from "assets/software-logo.svg";
@@ -27,8 +27,6 @@ import { ProjectPopover } from "components/project-popover";
 // prop drilling
 
 export const AuthenticatedApp = () => {
-  const [projectModalOpen, setProjectModalOpen] = useState(false);
-
   return (
     <Container>
       <Router>
