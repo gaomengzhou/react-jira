@@ -1,18 +1,8 @@
-/** @jsx jsx */
-import { jsx } from "@emotion/react";
 import React from "react";
 import { Form, Input } from "antd";
-import { Project } from "screens/project-list/list";
 import { UserSelect } from "components/user-select";
-
-export interface User {
-  id: number;
-  name: string;
-  email: string;
-  title: string;
-  organization: string;
-  token: string;
-}
+import { Project } from "types/project";
+import { User } from "types/user";
 
 interface SearchPanelProps {
   users: User[];
@@ -22,7 +12,7 @@ interface SearchPanelProps {
 
 export const SearchPanel = ({ users, param, setParam }: SearchPanelProps) => {
   return (
-    <Form css={{ marginBottom: "2rem" }} layout={"inline"}>
+    <Form style={{ marginBottom: "2rem" }} layout={"inline"}>
       <Form.Item>
         {/*setParam(Object.assign({}, param, {name:evt.target.value}))*/}
         <Input
