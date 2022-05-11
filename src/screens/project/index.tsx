@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { Navigate, Route, Routes, useLocation } from "react-router";
 import { KanbanScreen } from "screens/kanban";
 import { EpicScreen } from "screens/epic";
-import { ScreenContainer } from "components/lib";
 import styled from "@emotion/styled";
 import { Menu } from "antd";
 
@@ -14,11 +13,10 @@ const useRouteType = () => {
 
 export const ProjectScreen = () => {
   const routeType = useRouteType();
-
   return (
     <Container>
       <Aside>
-        <Menu mode="inline" selectedKeys={[routeType]}>
+        <Menu mode={"inline"} selectedKeys={[routeType]}>
           <Menu.Item key={"kanban"}>
             <Link to={"kanban"}>看板</Link>
           </Menu.Item>
@@ -48,6 +46,7 @@ const Aside = styled.aside`
 const Main = styled.div`
   box-shadow: -5px 0 5px -5px rgba(0, 0, 0, 0.1);
   display: flex;
+  overflow: hidden;
 `;
 
 const Container = styled.div`
