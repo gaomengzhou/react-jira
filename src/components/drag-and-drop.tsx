@@ -7,7 +7,9 @@ import {
   DroppableProvided,
   DroppableProvidedProps,
 } from "react-beautiful-dnd";
+
 type DropProps = Omit<DroppableProps, "children"> & { children: ReactNode };
+
 export const Drop = ({ children, ...props }: DropProps) => {
   return (
     <Droppable {...props}>
